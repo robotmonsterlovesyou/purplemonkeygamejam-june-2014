@@ -34,6 +34,18 @@
 
     };
 
+    Game.prototype.getPreviousScene = function () {
+
+        if (this.scenes.length > 1) {
+
+            return this.scenes[this.scenes.length - 2];
+
+        }
+
+        return false;
+
+    };
+
     Game.prototype.popScene = function () {
 
         var currentScene = this.scenes.pop();
@@ -85,8 +97,8 @@
         this._init = function () { return undefined; };
         this._resume = function () { return undefined; };
         this._destory = function () { return undefined; };
-        this._draw = function (game) { game.stage.clear(); };
-        this._pause = function (game) { this.destory().call(this, game); };
+        this._draw = function () { return undefined; };
+        this._pause = function () { return undefined; };
 
     };
 
