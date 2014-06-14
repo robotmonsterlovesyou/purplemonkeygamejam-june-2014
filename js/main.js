@@ -1,3 +1,5 @@
+/*globals requirejs*/
+
 requirejs.config({
     'paths': {
         'facade': '../libs/facade.min',
@@ -16,12 +18,13 @@ requirejs.config({
 
 define(function (require) {
 
+    'use strict';
+
     var Facade = require('facade'),
         Game = require('game'),
-        titleScene = require('js/title.js'),
-        gameScene = require('js/game.js');
-
-    var app = new Game(new Facade('stage', 1400, 750));
+        // titleScene = require('js/title.js'),
+        gameScene = require('js/game.js'),
+        app = new Game(new Facade('stage', 1400, 750));
 
     app.stage.draw(app.callback.bind(app, app.stage));
 

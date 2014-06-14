@@ -30,7 +30,7 @@ define(function (require) {
 
         this.assets.sky.context.fillStyle = '#fff';
 
-        for (i = 0; i < 1000; i++) {
+        for (i = 0; i < 1000; i += 1) {
 
             this.assets.sky.context.globalAlpha = Math.round(Math.random() * 100) / 100;
 
@@ -67,19 +67,20 @@ define(function (require) {
 
                     var coords = tag.getAttribute('d').replace(/[a-z]/ig, '').replace(/^\s|\s$/g, '').split(/\s/),
                         position = tag.parentNode.getAttribute('transform').match(/([0-9\.]+), ([0-9\.]+)/),
-                        points = [];
+                        points = [],
+                        object;
 
                     coords.pop(); // Prevent duplicate point (manual closing of polygon).
 
                     coords.forEach(function (coord) {
 
-                        var coord = coord.split(/\,/);
+                        coord = coord.split(/\,/);
 
                         points.push([parseFloat(coord[0]), parseFloat(coord[1])]);
 
                     });
 
-                    var object = new Facade.Polygon($.extend({
+                    object = new Facade.Polygon($.extend({
                         x: position[1],
                         y: position[2],
                         points: points

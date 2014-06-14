@@ -1,5 +1,7 @@
 define(function (require) {
 
+    'use strict';
+
     var Facade = require('facade'),
         Game = require('game'),
         titleScene = new Game.Scene('title.js'),
