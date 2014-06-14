@@ -4,21 +4,37 @@ define(function (require) {
 
     var Facade = require('facade'),
         Game = require('game'),
-        titleScene = new Game.Scene('title.js'),
+        titleScene = new Game.Scene('title'),
         gameScene = require('js/game.js');
 
     titleScene.init(function (game) {
 
+        var i;
+
         this.assets = {};
         this.methods = {};
 
-        this.assets.title = new Facade.Text('Light & Shadow', {
+        this.assets.sky = new Facade('sky', game.stage.width(), game.stage.height());
+
+        this.assets.sky.context.fillStyle = '#fff';
+
+        for (i = 0; i < 1000; i += 1) {
+
+            this.assets.sky.context.globalAlpha = Math.round(Math.random() * 100) / 100;
+
+            this.assets.sky.context.fillRect(
+                Math.round(Math.random() * this.assets.sky.width()),
+                Math.round(Math.random() * this.assets.sky.height()),
+                1,
+                1
+            );
+
+        }
+
+        this.assets.title = new Facade.Image('images/logo@2x.png', {
             x: game.stage.width() / 2,
             y: game.stage.height() / 2,
-            fontFamily: 'Helvetica-Light',
-            fontSize: 70,
-            fillStyle: '#ffffff',
-            textAlignment: 'center',
+            scale: 0.5,
             anchor: 'center'
         });
 
@@ -39,6 +55,14 @@ define(function (require) {
     titleScene.draw(function (game) {
 
         game.stage.clear();
+
+        game.stage.context.save();
+
+        game.stage.context.globalAlpha = (Math.random() * 50 + 50) / 100;
+
+        game.stage.context.drawImage(this.assets.sky.canvas, 0, 0);
+
+        game.stage.context.restore();
 
         game.stage.addToStage(this.assets.title);
 

@@ -11,37 +11,20 @@ define(function (require) {
 
     require('facadejs-Box2D');
 
-    gameScene.init(function (game) {
+    gameScene.init(function () {
 
-        var self = this,
-            i;
+        var self = this;
 
         this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 40), false);
 
         this.assets = {
             player: null,
             map: [],
-            sky: new Facade('sky', game.stage.width(), game.stage.height()),
             camera: [0, 0]
         };
         this.methods = {};
 
         this.gamepad = new Gamepad();
-
-        this.assets.sky.context.fillStyle = '#fff';
-
-        for (i = 0; i < 1000; i += 1) {
-
-            this.assets.sky.context.globalAlpha = Math.round(Math.random() * 100) / 100;
-
-            this.assets.sky.context.fillRect(
-                Math.round(Math.random() * this.assets.sky.width()),
-                Math.round(Math.random() * this.assets.sky.height()),
-                1,
-                1
-            );
-
-        }
 
         $.get('data/level1.json').done(function (data) {
 
@@ -107,7 +90,7 @@ define(function (require) {
 
         game.stage.context.globalAlpha = (Math.random() * 50 + 50) / 100;
 
-        game.stage.context.drawImage(this.assets.sky.canvas, 0, 0);
+        game.stage.context.drawImage(game.getPreviousScene().assets.sky.canvas, 0, 0);
 
         game.stage.context.restore();
 

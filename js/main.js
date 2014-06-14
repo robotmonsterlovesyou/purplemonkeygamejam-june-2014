@@ -22,15 +22,15 @@ define(function (require) {
 
     var Facade = require('facade'),
         Game = require('game'),
-        // titleScene = require('js/title.js'),
-        gameScene = require('js/game.js'),
+        titleScene = require('js/title.js'),
+        // gameScene = require('js/game.js'),
         app = new Game(new Facade('stage', 1400, 750));
 
     app.stage.draw(app.callback.bind(app, app.stage));
 
     // app.stage.resizeForHDPI();
 
-    app.pushScene(gameScene);
+    app.pushScene(titleScene);
 
     document.body.appendChild(app.stage.canvas);
 
