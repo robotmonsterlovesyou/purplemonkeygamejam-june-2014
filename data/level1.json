@@ -1,0 +1,28 @@
+{
+
+    "player": {
+        "options": {
+            "x": 300,
+            "y": 574,
+            "points": [ [0, 0], [50, 0], [50, 75], [0, 75] ],
+            "fillStyle": "#000"
+        },
+        "settings": {
+            "type": "dynamic",
+            "fixedRotation": true
+        },
+        "properties": {
+            "speed": 5
+        }
+    },
+    "map": {
+        "file": "data/level1.svg",
+        "options": {
+            "fillStyle": "#000"
+        },
+        "settings": {
+
+        }
+    }
+
+}
