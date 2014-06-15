@@ -71,6 +71,20 @@ define(function (require) {
 
     });
 
+    titleScene.resume(function (game) {
+
+        game.stage.canvas.addEventListener('click', this.methods.handlePressToStart);
+        document.addEventListener('keydown', this.methods.handlePressToStart);
+
+    });
+
+    titleScene.pause(function (game) {
+
+        game.stage.canvas.removeEventListener('click', this.methods.handlePressToStart);
+        document.removeEventListener('keydown', this.methods.handlePressToStart);
+
+    });
+
     titleScene.destory(function (game) {
 
         game.stage.canvas.removeEventListener('click', this.methods.handlePressToStart);
