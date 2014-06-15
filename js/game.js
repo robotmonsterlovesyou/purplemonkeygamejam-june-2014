@@ -57,9 +57,19 @@ define(function (require) {
             player: null,
             enemies: [],
             map: [],
-            camera: [0, 0]
+            camera: [0, 0],
+            score: new Facade.Text('Score: 0', {
+                x: 10,
+                y: 10,
+                fontFamily: 'Helvetica-Light',
+                fontSize: 20,
+                fillStyle: '#fff',
+                anchor: 'top/left'
+            })
         };
         this.methods = {};
+
+        this.score = 0;
 
         this.gamepad = new Gamepad();
 
@@ -94,9 +104,13 @@ define(function (require) {
 
                     self.assets.enemies[self.assets.enemies.length - 1].Box2D('setCallback', 'PreSolve', function (a, b) {
 
-                        if (self.assets.player === b) {
+                        if (self.assets.player === b && !a._collided) {
 
                             a.setOptions({ fillStyle: a._color });
+
+                            a._collided = true;
+
+                            self.score++;
 
                         }
 
@@ -231,6 +245,10 @@ define(function (require) {
         game.stage.context.drawImage(game.getPreviousScene().assets.sky.canvas, 0, 0);
 
         game.stage.context.restore();
+
+        this.assets.score.setText(this.assets.score.value.replace(/[0-9]+/, this.score));
+
+        game.stage.addToStage(this.assets.score);
 
         game.stage.context.translate.apply(game.stage.context, this.assets.camera);
 
