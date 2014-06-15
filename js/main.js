@@ -7,7 +7,8 @@ requirejs.config({
         'game': '../libs/game',
         'gamepad': '../libs/gamepad.min',
         'jquery': '../libs/jquery.min',
-        'box2dweb': '../libs/box2dweb.min'
+        'box2dweb': '../libs/box2dweb.min',
+        'randomColor': '../libs/randomColor'
     },
     'shim': {
         'box2dweb': {
