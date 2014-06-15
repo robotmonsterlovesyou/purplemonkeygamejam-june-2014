@@ -15,10 +15,17 @@ define(function (require) {
     gameScene.init(function (game) {
 
         var self = this,
-            currentEnemyShape,
-            i;
+            // debugDraw = new Box2D.Dynamics.b2DebugDraw(),
+            currentEnemyShape;
 
         this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 40), false);
+
+        // debugDraw.SetSprite(game.stage.context);
+        // debugDraw.SetDrawScale(30);
+        // debugDraw.SetFillAlpha(0.3);
+        // debugDraw.SetLineThickness(1.0);
+        // debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_centerOfMassBit);
+        // this.world.SetDebugDraw(debugDraw);
 
         this.assets = {
             player: null,
@@ -31,6 +38,49 @@ define(function (require) {
         this.gamepad = new Gamepad();
 
         $.get('data/level1.json').done(function (data) {
+
+            function populateEnemies() {
+
+                var i,
+                    length,
+                    enemiesArray = [];
+
+                for (i = 0, length = 25 - self.assets.enemies.length; i < length; i += 1) {
+
+                    currentEnemyShape = data.enemies.shapes[Math.floor(Math.random() * data.enemies.shapes.length)];
+
+                    self.assets.enemies.push(new Facade.Polygon(
+                        $.extend(
+                            { x: Math.random() * 9000, y: Math.random() * -500, fillStyle: randomColor({ luminosity: 'light', format: 'rgb' }) },
+                            currentEnemyShape.options
+                        )
+                    ));
+
+                    self.assets.enemies[self.assets.enemies.length - 1].Box2D('createObject', self.world, data.enemies.settings);
+
+                    self.assets.enemies[self.assets.enemies.length - 1]._box2d.entity.SetBullet(true);
+
+                    self.assets.enemies[self.assets.enemies.length - 1].Box2D('setForce', -(Math.random() * 20 + 10), 0);
+
+                }
+
+                self.assets.enemies.forEach(function (enemy) {
+
+                    if (enemy.Box2D('getCurrentState') && enemy.Box2D('getCurrentState').x + enemy.getMetric('width') < 0) {
+
+                        enemy.Box2D('destroyObject');
+
+                    } else {
+
+                        enemiesArray.push(enemy);
+
+                    }
+
+                });
+
+                return enemiesArray;
+
+            }
 
             self.assets.player = new Facade.Polygon(data.player.options);
 
@@ -70,24 +120,13 @@ define(function (require) {
 
             });
 
-            for (i = 0; i < 100; i += 1) {
+            self.assets.enemies = populateEnemies();
 
-                currentEnemyShape = data.enemies.shapes[Math.floor(Math.random() * data.enemies.shapes.length)];
+            window.setInterval(function () {
 
-                self.assets.enemies.push(new Facade.Polygon(
-                    $.extend(
-                        { x: Math.random() * 9000, y: Math.random() * -500, fillStyle: randomColor({ luminosity: 'light', format: 'rgb' }) },
-                        currentEnemyShape.options
-                    )
-                ));
+                self.assets.enemies = populateEnemies();
 
-                self.assets.enemies[self.assets.enemies.length -1].Box2D('createObject', self.world, data.enemies.settings);
-
-                self.assets.enemies[self.assets.enemies.length -1]._box2d.entity.SetBullet(true);
-
-                self.assets.enemies[self.assets.enemies.length -1].Box2D('setForce', -(Math.random() * 20 + 10), 0);
-
-            }
+            }, 100);
 
             $.get(data.map.file).done(function (svg) {
 
@@ -164,6 +203,8 @@ define(function (require) {
             game.stage.addToStage(this.assets.map);
 
         }
+
+        // this.world.DrawDebugData();
 
     });
 

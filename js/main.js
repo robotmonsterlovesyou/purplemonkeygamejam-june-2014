@@ -32,7 +32,7 @@ define(function (require) {
     // app.stage.resizeForHDPI();
 
     app.pushScene(titleScene);
-    app.pushScene(gameScene);
+    // app.pushScene(gameScene);
 
     document.body.appendChild(app.stage.canvas);
 
