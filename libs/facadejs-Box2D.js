@@ -197,6 +197,31 @@ define(function (require) {
 
         },
 
+        setForce: function (x, y) {
+
+            if (this._box2d !== undefined) {
+
+                if (x === undefined) {
+
+                    x = 0;
+
+                }
+
+                if (y === undefined) {
+
+                    y = 0;
+
+                }
+
+                this._box2d.entity.ApplyForce(
+                    new Box2D.Common.Math.b2Vec2(x, y),
+                    this._box2d.entity.GetWorldCenter()
+                );
+
+            }
+
+        },
+
         setVelocity: function (x, y) {
 
             if (this._box2d !== undefined) {

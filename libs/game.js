@@ -110,6 +110,14 @@
 
     };
 
+    Game.Scene.prototype.resume = function (func) {
+
+        if (typeof func === 'function') { this._resume = func; }
+
+        return this._resume;
+
+    };
+
     Game.Scene.prototype.destory = function (func) {
 
         if (typeof func === 'function') { this._destory = func; }
