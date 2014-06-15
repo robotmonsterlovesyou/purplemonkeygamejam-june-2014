@@ -11,7 +11,7 @@ define(function (require) {
 
     require('facadejs-Box2D');
 
-    gameScene.init(function () {
+    gameScene.init(function (game) {
 
         var self = this;
 
@@ -41,11 +41,27 @@ define(function (require) {
 
             self.gamepad.on('hold', 'd_pad_left', function () {
 
+                var ratio = (self.assets.player.getMetric('x') + self.assets.camera[0]) / game.stage.width();
+
+                if (self.assets.player.getMetric('x') + self.assets.camera[0] < 400 && self.assets.camera[0] < 0) {
+
+                    self.assets.camera[0] += data.player.properties.speed / 2 + ratio;
+
+                }
+
                 self.assets.player.Box2D('setVelocity', -data.player.properties.speed, self.assets.player.Box2D('getVelocity').y);
 
             });
 
             self.gamepad.on('hold', 'd_pad_right', function () {
+
+                var ratio = (self.assets.player.getMetric('x') + self.assets.camera[0]) / game.stage.width();
+
+                if (self.assets.player.getMetric('x') + self.assets.camera[0] > 1000) {
+
+                    self.assets.camera[0] -= data.player.properties.speed / 2 + ratio;
+
+                }
 
                 self.assets.player.Box2D('setVelocity', data.player.properties.speed, self.assets.player.Box2D('getVelocity').y);
 
