@@ -7,13 +7,16 @@ define(function (require) {
         Gamepad = require('gamepad'),
         $ = require('jquery'),
         Box2D = require('box2dweb'),
+        randomColor = require('randomColor'),
         gameScene = new Game.Scene('game');
 
     require('facadejs-Box2D');
 
     gameScene.init(function (game) {
 
-        var self = this;
+        var self = this,
+            currentEnemyShape,
+            i;
 
         this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 40), false);
 
@@ -67,19 +70,24 @@ define(function (require) {
 
             });
 
-            data.enemies.forEach(function (enemy) {
+            for (i = 0; i < 100; i += 1) {
 
-                var object = new Facade.Polygon(enemy.options);
+                currentEnemyShape = data.enemies.shapes[Math.floor(Math.random() * data.enemies.shapes.length)];
 
-                object.Box2D('createObject', self.world, enemy.settings);
+                self.assets.enemies.push(new Facade.Polygon(
+                    $.extend(
+                        { x: Math.random() * 9000, y: Math.random() * -500, fillStyle: randomColor({ luminosity: 'light', format: 'rgb' }) },
+                        currentEnemyShape.options
+                    )
+                ));
 
-                object._box2d.entity.SetBullet(true);
+                self.assets.enemies[self.assets.enemies.length -1].Box2D('createObject', self.world, data.enemies.settings);
 
-                object.Box2D('setForce', enemy.properties.speed, 0);
+                self.assets.enemies[self.assets.enemies.length -1]._box2d.entity.SetBullet(true);
 
-                self.assets.enemies.push(object);
+                self.assets.enemies[self.assets.enemies.length -1].Box2D('setForce', -(Math.random() * 20 + 10), 0);
 
-            });
+            }
 
             $.get(data.map.file).done(function (svg) {
 
