@@ -56,11 +56,13 @@ define(function (require) {
                         )
                     ));
 
+                    self.assets.enemies[self.assets.enemies.length - 1]._scale = 1;
+
                     self.assets.enemies[self.assets.enemies.length - 1].Box2D('createObject', self.world, data.enemies.settings);
 
                     self.assets.enemies[self.assets.enemies.length - 1]._box2d.entity.SetBullet(true);
 
-                    self.assets.enemies[self.assets.enemies.length - 1].Box2D('setForce', -(Math.random() * 20 + 10), 0);
+                    self.assets.enemies[self.assets.enemies.length - 1].Box2D('setForce', -(Math.random() * 20 + 5), 0);
 
                 }
 
@@ -110,7 +112,7 @@ define(function (require) {
 
                 var ratio = (self.assets.player.getMetric('x') + self.assets.camera[0]) / game.stage.width();
 
-                if (self.assets.player.getMetric('x') + self.assets.camera[0] > 1000) {
+                if (self.assets.player.getMetric('x') + self.assets.camera[0] > 800) {
 
                     self.assets.camera[0] -= data.player.properties.speed / 2 + ratio;
 
@@ -127,6 +129,20 @@ define(function (require) {
                 self.assets.enemies = populateEnemies();
 
             }, 100);
+
+            window.setInterval(function () {
+
+                self.assets.enemies.forEach(function (enemy) {
+
+                    if (!enemy._scale || enemy._scale <= 1) {
+
+                        enemy._scale = 1.5;
+
+                    }
+
+                });
+
+            }, 500);
 
             $.get(data.map.file).done(function (svg) {
 
@@ -192,7 +208,13 @@ define(function (require) {
 
             this.assets.enemies.forEach(function (enemy) {
 
-                game.stage.addToStage(enemy, enemy.Box2D('getCurrentState'));
+                if (enemy._scale > 1) {
+
+                    enemy._scale -= 0.1;
+
+                }
+
+                game.stage.addToStage(enemy, $.extend({ scale: enemy._scale }, enemy.Box2D('getCurrentState')));
 
             });
 
