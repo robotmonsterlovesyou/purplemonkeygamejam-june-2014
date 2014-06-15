@@ -16,9 +16,35 @@ define(function (require) {
 
         var self = this,
             // debugDraw = new Box2D.Dynamics.b2DebugDraw(),
+            listener = new Box2D.Dynamics.b2ContactListener(),
             currentEnemyShape;
 
         this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 40), false);
+
+        ['PreSolve', 'PostSolve', 'BeginContact', 'EndContact'].forEach(function (type) {
+
+            listener[type] = (function (entities) {
+
+                var a = entities.GetFixtureA().GetBody().GetUserData(),
+                    b = entities.GetFixtureB().GetBody().GetUserData();
+
+                if (a && typeof a._box2d.callback[this.type] === 'function') {
+
+                    a._box2d.callback[this.type].call(a, a, b);
+
+                }
+
+                if (b && typeof b._box2d.callback[this.type] === 'function') {
+
+                    b._box2d.callback[this.type].call(b, a, b);
+
+                }
+
+            }).bind({ type: type });
+
+        });
+
+        this.world.SetContactListener(listener);
 
         // debugDraw.SetSprite(game.stage.context);
         // debugDraw.SetDrawScale(30);
@@ -51,18 +77,30 @@ define(function (require) {
 
                     self.assets.enemies.push(new Facade.Polygon(
                         $.extend(
-                            { x: Math.random() * 9000, y: Math.random() * -500, fillStyle: randomColor({ luminosity: 'light', format: 'rgb' }) },
+                            { x: Math.random() * 9000, y: Math.random() * -500, fillStyle: '#111' },
                             currentEnemyShape.options
                         )
                     ));
 
                     self.assets.enemies[self.assets.enemies.length - 1]._scale = 1;
 
+                    self.assets.enemies[self.assets.enemies.length - 1]._color = randomColor({ luminosity: 'light', format: 'rgb' });
+
                     self.assets.enemies[self.assets.enemies.length - 1].Box2D('createObject', self.world, data.enemies.settings);
 
                     self.assets.enemies[self.assets.enemies.length - 1]._box2d.entity.SetBullet(true);
 
                     self.assets.enemies[self.assets.enemies.length - 1].Box2D('setForce', -(Math.random() * 20 + 5), 0);
+
+                    self.assets.enemies[self.assets.enemies.length - 1].Box2D('setCallback', 'PreSolve', function (a, b) {
+
+                        if (self.assets.player === b) {
+
+                            a.setOptions({ fillStyle: a._color });
+
+                        }
+
+                    });
 
                 }
 
