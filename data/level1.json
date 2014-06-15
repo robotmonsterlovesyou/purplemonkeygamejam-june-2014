@@ -12,7 +12,7 @@
             "fixedRotation": true
         },
         "properties": {
-            "speed": 5
+            "speed": 10
         }
     },
     "map": {
@@ -23,6 +23,72 @@
         "settings": {
 
         }
-    }
+    },
+    "enemies": [
+        {
+            "options": {
+                "x": 1000,
+                "y": 500,
+                "points": [ [0, 0], [25, 0], [25, 25], [0, 25] ],
+                "fillStyle": "#f00"
+            },
+            "settings": {
+                "type": "dynamic",
+                "fixedRotation": false,
+                "friction": 0
+            },
+            "properties": {
+                "speed": -5
+            }
+        },
+        {
+            "options": {
+                "x": 1400,
+                "y": 500,
+                "points": [ [0, 0], [50, 0], [50, 50], [0, 50] ],
+                "fillStyle": "#0f0"
+            },
+            "settings": {
+                "type": "dynamic",
+                "fixedRotation": false,
+                "friction": 0
+            },
+            "properties": {
+                "speed": -10
+            }
+        },
+        {
+            "options": {
+                "x": 1400,
+                "y": 500,
+                "points": [ [0, 0], [25, 0], [25, 25], [0, 25] ],
+                "fillStyle": "#f00"
+            },
+            "settings": {
+                "type": "dynamic",
+                "fixedRotation": false,
+                "friction": 0
+            },
+            "properties": {
+                "speed": -5
+            }
+        },
+        {
+            "options": {
+                "x": 1800,
+                "y": 500,
+                "points": [ [0, 0], [100, 0], [100, 50] ],
+                "fillStyle": "#0af"
+            },
+            "settings": {
+                "type": "dynamic",
+                "fixedRotation": false,
+                "friction": 0
+            },
+            "properties": {
+                "speed": -5
+            }
+        }
+    ]
 
 }

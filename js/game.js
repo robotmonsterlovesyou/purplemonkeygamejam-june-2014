@@ -19,6 +19,7 @@ define(function (require) {
 
         this.assets = {
             player: null,
+            enemies: [],
             map: [],
             camera: [0, 0]
         };
@@ -32,6 +33,12 @@ define(function (require) {
 
             self.assets.player.Box2D('createObject', self.world, data.player.settings);
 
+            self.gamepad.on('press', 'button_1', function () {
+
+                self.assets.player.Box2D('setVelocity', self.assets.player.Box2D('getVelocity').x, -20);
+
+            });
+
             self.gamepad.on('hold', 'd_pad_left', function () {
 
                 self.assets.player.Box2D('setVelocity', -data.player.properties.speed, self.assets.player.Box2D('getVelocity').y);
@@ -41,6 +48,20 @@ define(function (require) {
             self.gamepad.on('hold', 'd_pad_right', function () {
 
                 self.assets.player.Box2D('setVelocity', data.player.properties.speed, self.assets.player.Box2D('getVelocity').y);
+
+            });
+
+            data.enemies.forEach(function (enemy) {
+
+                var object = new Facade.Polygon(enemy.options);
+
+                object.Box2D('createObject', self.world, enemy.settings);
+
+                object._box2d.entity.SetBullet(true);
+
+                object.Box2D('setForce', enemy.properties.speed, 0);
+
+                self.assets.enemies.push(object);
 
             });
 
@@ -94,9 +115,23 @@ define(function (require) {
 
         game.stage.context.restore();
 
+        game.stage.context.translate.apply(game.stage.context, this.assets.camera);
+
         if (this.assets.player) {
 
-            game.stage.addToStage(this.assets.player, this.assets.player.Box2D('getCurrentState'));
+            this.assets.player.setOptions(this.assets.player.Box2D('getCurrentState'));
+
+            game.stage.addToStage(this.assets.player);
+
+        }
+
+        if (this.assets.enemies.length) {
+
+            this.assets.enemies.forEach(function (enemy) {
+
+                game.stage.addToStage(enemy, enemy.Box2D('getCurrentState'));
+
+            });
 
         }
 
