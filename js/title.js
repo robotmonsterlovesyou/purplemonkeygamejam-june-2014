@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var Facade = require('facade'),
+        Gamepad = require('gamepad'),
         Game = require('game'),
         titleScene = new Game.Scene('title'),
         gameScene = require('js/game.js');
@@ -13,6 +14,8 @@ define(function (require) {
 
         this.assets = {};
         this.methods = {};
+
+        this.gamepad = new Gamepad();
 
         this.assets.sky = new Facade('sky', game.stage.width(), game.stage.height());
 
@@ -50,6 +53,12 @@ define(function (require) {
 
         };
 
+        this.gamepad.on('press', 'button_1', function () {
+
+            game.pushScene(gameScene);
+
+        });
+
     });
 
     titleScene.draw(function (game) {
@@ -73,12 +82,16 @@ define(function (require) {
 
     titleScene.resume(function (game) {
 
+        this.gamepad.resume();
+
         game.stage.canvas.addEventListener('click', this.methods.handlePressToStart);
         document.addEventListener('keydown', this.methods.handlePressToStart);
 
     });
 
     titleScene.pause(function (game) {
+
+        this.gamepad.pause();
 
         game.stage.canvas.removeEventListener('click', this.methods.handlePressToStart);
         document.removeEventListener('keydown', this.methods.handlePressToStart);
