@@ -127,13 +127,9 @@ define(function (require) {
 
                 self._box2d.entity.SetUserData(null);
 
-                setTimeout(function () {
+                self._box2d.entity.GetWorld().DestroyBody(self._box2d.entity);
 
-                    self._box2d.entity.GetWorld().DestroyBody(self._box2d.entity);
-
-                    delete self._box2d;
-
-                }, 0);
+                delete self._box2d;
 
             }
 
