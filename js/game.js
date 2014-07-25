@@ -15,43 +15,9 @@ define(function (require) {
     gameScene.init(function (game) {
 
         var self = this,
-            // debugDraw = new Box2D.Dynamics.b2DebugDraw(),
-            listener = new Box2D.Dynamics.b2ContactListener(),
             currentEnemyShape;
 
-        this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0, 40), false);
-
-        ['PreSolve', 'PostSolve', 'BeginContact', 'EndContact'].forEach(function (type) {
-
-            listener[type] = (function (entities) {
-
-                var a = entities.GetFixtureA().GetBody().GetUserData(),
-                    b = entities.GetFixtureB().GetBody().GetUserData();
-
-                if (a && typeof a._box2d.callback[this.type] === 'function') {
-
-                    a._box2d.callback[this.type].call(a, a, b);
-
-                }
-
-                if (b && typeof b._box2d.callback[this.type] === 'function') {
-
-                    b._box2d.callback[this.type].call(b, b, a);
-
-                }
-
-            }).bind({ type: type });
-
-        });
-
-        this.world.SetContactListener(listener);
-
-        // debugDraw.SetSprite(game.stage.context);
-        // debugDraw.SetDrawScale(30);
-        // debugDraw.SetFillAlpha(0.3);
-        // debugDraw.SetLineThickness(1.0);
-        // debugDraw.SetFlags(Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_centerOfMassBit);
-        // this.world.SetDebugDraw(debugDraw);
+        this.world = new Facade.Entity().Box2D('createWorld', { canvas: stage.canvas, gravity: [ 0, 40 ] });
 
         this.assets = {
             player: null,
@@ -236,7 +202,7 @@ define(function (require) {
 
         game.stage.clear();
 
-        this.world.Step(1 / 60, 8, 3);
+        this.world.Box2D('step');
 
         game.stage.context.save();
 
